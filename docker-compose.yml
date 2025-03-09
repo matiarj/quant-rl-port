@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  bregma-rl:
+    build: .
+    volumes:
+      - .:/app
+      - ./data:/app/data
+      - ./checkpoints:/app/checkpoints
+      - ./results:/app/results
+      - ./logs:/app/logs
+    command: python main.py --config config.yaml
+    environment:
+      - PYTHONUNBUFFERED=1
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+              
+  bregma-rl-cpu:
+    build: .
+    volumes:
+      - .:/app
+      - ./data:/app/data
+      - ./checkpoints:/app/checkpoints
+      - ./results:/app/results
+      - ./logs:/app/logs
+    command: python main.py --config config.yaml
+    environment:
+      - PYTHONUNBUFFERED=1
+      
+# Use GPU version with: docker-compose -f docker-compose.yml up bregma-rl
+# Use CPU version with: docker-compose -f docker-compose.yml up bregma-rl-cpu

@@ -1,0 +1,53 @@
+data:
+  file_path: "data/model68_hype_2024_bt_df4web.csv"
+  # Not using these percentages anymore as we're using fixed date ranges
+  train_val_test_split: [0.6, 0.2, 0.2]
+  
+preprocessing:
+  num_lags: 10
+  reversal_lookbacks: [3, 5, 9, 16, 28, 50, 90]
+  correlation_threshold: 0.95
+  add_technical_indicators: true
+  market_regime_detection: true
+  
+trading:
+  transaction_cost: 0.001  # 0.1%
+  initial_cash: 1000000
+  trading_penalty_factor: 0.0005  # Penalty for excessive trading
+  drawdown_penalty_factor: 0.5  # Penalty for drawdowns
+  
+rl:
+  algorithms: ["DQN", "DDQN", "A2C"]  # Will add PPO when implemented
+  use_ensemble: true
+  use_classifier: true
+  gamma: 0.99
+  eps_start: 1.0
+  eps_end: 0.05
+  eps_decay: 0.9998  # Slower decay for more exploration
+  batch_size: 256  # Larger batch size for more stable gradients
+  target_update: 50  # Less frequent target updates
+  memory_size: 500000  # Much larger memory for longer history
+  prioritized_replay: true  # Use prioritized experience replay
+  num_episodes: 200  # More episodes for better evaluation
+  
+network:
+  hidden_sizes: [512, 256, 128, 64, 32]  # Deeper network
+  learning_rate: 0.0001  # Lower learning rate for stability
+  dropout: 0.25  # Add dropout for regularization
+  use_batch_norm: true  # Add batch normalization
+  lr_scheduler: true  # Add learning rate scheduler
+  
+classifier:
+  types: ["SVM", "RandomForest", "LogisticRegression"]
+  variance_threshold: 0.2
+  training_interval: 50  # Less frequent classifier training (every 50 episodes)
+  feature_importance_analysis: true
+  
+checkpoint:
+  save_interval: 200  # Less frequent checkpoints
+  path: "checkpoints/"
+  
+evaluation:
+  benchmark_strategies: ["equal_weight", "momentum", "minimum_variance"]
+  walk_forward_periods: 4  # Number of walk-forward testing periods
+  sensitivity_analysis: true  # Perform sensitivity analysis

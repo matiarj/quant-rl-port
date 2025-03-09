@@ -1,0 +1,59 @@
+data:
+  file_path: "data/model68_hype_2024_bt_df4web.csv"
+  train_val_test_split: [0.6, 0.2, 0.2]
+
+preprocessing:
+  num_lags: 10
+  reversal_lookbacks: [3, 5, 9, 16, 28, 50, 90]
+  correlation_threshold: 0.95
+  add_technical_indicators: true
+  market_regime_detection: true
+
+trading:
+  transaction_cost: 0.001
+  initial_cash: 1000000
+  trading_penalty_factor: 0.0005
+  drawdown_penalty_factor: 0.5
+
+rl:
+  algorithms: ["DQN", "DDQN", "A2C", "GRPO"]  # Added GRPO
+  use_ensemble: true
+  use_classifier: true
+  gamma: 0.99
+  eps_start: 1.0
+  eps_end: 0.05
+  eps_decay: 0.9998
+  batch_size: 256
+  target_update: 50
+  memory_size: 500000
+  prioritized_replay: true
+  num_episodes: 3000  # Increased for GRPO which can handle more steps
+  # GRPO specific parameters
+  eps_clip: 0.2
+  entropy_coef: 0.01
+  value_coef: 0.5
+  adv_coef: 0.1
+  uncertainty: 0.05
+  mini_batch_size: 8
+
+network:
+  hidden_sizes: [512, 256, 128, 64, 32]
+  learning_rate: 0.0001
+  dropout: 0.25
+  use_batch_norm: true
+  lr_scheduler: true
+
+classifier:
+  types: ["SVM", "RandomForest", "LogisticRegression", "XGBoost"]
+  variance_threshold: 0.1
+  training_interval: 50
+  feature_importance_analysis: true
+  
+checkpoint:
+  save_interval: 200
+  path: "checkpoints/"
+
+evaluation:
+  benchmark_strategies: ["equal_weight", "momentum", "minimum_variance"]
+  walk_forward_periods: 4
+  sensitivity_analysis: true
